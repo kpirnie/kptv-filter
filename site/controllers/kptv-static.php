@@ -1430,7 +1430,7 @@ if (! class_exists('KPTV_Static')) {
             }
 
             // Use OPcache if available
-            $configPath = KPTV_PATH . 'assets/config.json';
+            $configPath = KPTV_PATH . '/config.json';
 
             if (
                 function_exists('opcache_is_script_cached') &&
