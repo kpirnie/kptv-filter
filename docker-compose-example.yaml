@@ -1,15 +1,27 @@
 services:
   kptv:
-    image: kpirnie/kptv-app:latest
+    # Use 'latest' for stable (main branch) or 'dev' for development branch
+    image: ghcr.io/kpirnie/kptv-app:latest
+    # image: ghcr.io/kpirnie/kptv-app:dev
     container_name: kptv-stream-manager
     ports:
       - "8080:80"
     volumes:
       - kptv-data:/var/lib/mysql
       # Optional: Mount custom config and crontab
-      - ./config.json:/var/www/html/assets/config.json
+      - ./config.json:/var/www/html/config.json
       - ./crontab:/etc/crontabs/root
+    # environment:
+    #   - DEBUG=true  # Uncomment for verbose logging
     restart: unless-stopped
+
+    # Add healthcheck to ensure the service is running properly
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost/ || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 volumes:
   kptv-data:
