@@ -1,10 +1,10 @@
 #!/bin/sh
 set -e
 
-# Read database credentials from config.json
-DB_SCHEMA=$(grep -o '"schema": *"[^"]*"' /var/www/html/config.json | cut -d'"' -f4)
-DB_USER=$(grep -o '"username": *"[^"]*"' /var/www/html/config.json | cut -d'"' -f4)
-DB_PASS=$(grep -o '"password": *"[^"]*"' /var/www/html/config.json | cut -d'"' -f4)
+# Read database credentials from config.json using jq
+DB_SCHEMA=$(jq -r '.database.schema' /var/www/html/config.json)
+DB_USER=$(jq -r '.database.username' /var/www/html/config.json)
+DB_PASS=$(jq -r '.database.password' /var/www/html/config.json)
 
 # Use defaults if empty
 DB_SCHEMA=${DB_SCHEMA:-kptv}
@@ -22,7 +22,9 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
     
     /usr/bin/mariadb -e "CREATE DATABASE IF NOT EXISTS ${DB_SCHEMA};"
     /usr/bin/mariadb -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';"
+    /usr/bin/mariadb -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASS}';"
     /usr/bin/mariadb -e "GRANT ALL PRIVILEGES ON ${DB_SCHEMA}.* TO '${DB_USER}'@'localhost';"
+    /usr/bin/mariadb -e "GRANT ALL PRIVILEGES ON ${DB_SCHEMA}.* TO '${DB_USER}'@'127.0.0.1';"
     /usr/bin/mariadb -e "FLUSH PRIVILEGES;"
     
     echo "Importing database schema..."
@@ -34,6 +36,7 @@ fi
 
 # Start all services
 echo "Starting services..."
+redis-server --daemonize yes
 /usr/bin/mariadbd --user=mysql --datadir=/var/lib/mysql &
 crond -f -l 2 &
 php-fpm &
