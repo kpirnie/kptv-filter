@@ -21,6 +21,7 @@ require_once $appPath . '/vendor/autoload.php';
 
 // Disable caching for CLI operations
 use KPT\Cache;
+
 Cache::configure([
     'enabled' => false,
     'path' => KPTV_PATH . '.cache/',
@@ -29,7 +30,6 @@ Cache::configure([
 ]);
 
 // Use the main app's KPT class for configuration
-use KPT\KPT;
 use Kptv\IptvSync\KpDb;
 use Kptv\IptvSync\ProviderManager;
 use Kptv\IptvSync\SyncEngine;
@@ -48,14 +48,14 @@ class IptvSyncApp
     {
         // Get database configuration from main app config file directly
         // to avoid any caching issues
-        $configPath = KPTV_PATH . 'assets/config.json';
-        
+        $configPath = KPTV_PATH . 'config.json';
+
         if (!file_exists($configPath)) {
             throw new RuntimeException('Configuration file not found: ' . $configPath);
         }
 
         $config = json_decode(file_get_contents($configPath));
-        
+
         if (!$config || !isset($config->database)) {
             throw new RuntimeException('Database configuration not found in application config');
         }
@@ -161,7 +161,7 @@ class IptvSyncApp
 
         // Get unique user IDs from providers
         $userIds = array_unique(array_column($providers, 'u_id'));
-        
+
         $totalFixed = 0;
 
         foreach ($userIds as $uid) {
@@ -184,7 +184,7 @@ class IptvSyncApp
         echo "Records fixed: {$totalFixed}\n";
         echo str_repeat('=', 60) . "\n\n";
     }
-        
+
 
     public function runCleanup(): void
     {
@@ -293,7 +293,7 @@ try {
             echo "Error: Invalid ignore fields: " . implode(', ', $invalidFields) . "\n";
             exit(1);
         }
-        
+
         if ($action !== 'fixup') {
             echo "Note: --ignore only applies to fixup action\n";
         }
@@ -319,7 +319,6 @@ try {
         'fixup' => $app->runFixup($userId, $providerId),
         'cleanup' => $app->runCleanup(),
     };
-
 } catch (\Exception $e) {
     echo "Fatal error: {$e->getMessage()}\n";
     if (isset($options['debug']) && $options['debug']) {

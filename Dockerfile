@@ -32,6 +32,7 @@ RUN apk add --no-cache \
 
 # Copy all config/app files in one layer
 COPY config/nginx.conf /etc/nginx/http.d/default.conf
+COPY config/php-custom.ini /usr/local/etc/php/conf.d/custom.ini
 COPY config/schema.sql /schema.sql
 COPY site/ /var/www/html/
 COPY entrypoint.sh /entrypoint.sh
