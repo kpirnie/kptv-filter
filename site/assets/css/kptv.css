@@ -648,7 +648,8 @@ a:focus {
     border-radius: 4px;
     color: var(--kptv-white);
     font-family: 'Rajdhani', sans-serif;
-    font-size: 1rem;
+    line-height: normal !important;
+    /*font-size: 1rem;*/
     padding: 10px 15px;
     width: 100%;
     transition: all 0.3s ease;
@@ -656,7 +657,7 @@ a:focus {
 
 .kptv-input:focus,
 .kptv-select:focus,
-.kptv-textarea:focus {
+.kptv-textarea:focus.active {
     outline: none;
     border-color: var(--kptv-orange);
 }
@@ -1568,4 +1569,97 @@ span.uk-text-muted:has(+ br.action-nl) {
 
 .bulk-action-bar>div>.uk-text-muted {
     display: none;
+}
+
+/* ============================================
+   SELECT2 COMPONENT - KPTV DARK THEME OVERRIDES
+   ============================================ */
+
+.kp-select2-display-uikit {
+    background: var(--kptv-dark-navy);
+    color: var(--kptv-white);
+    border: 1px solid var(--kptv-cyan);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.kp-select2-display-uikit:hover {
+    border-color: var(--kptv-cyan-light);
+}
+
+.kp-select2-display-uikit:focus,
+.kp-select2-display-uikit.kp-select2-open {
+    border-color: var(--kptv-orange);
+    background: var(--kptv-dark-navy);
+    box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.25);
+}
+
+.kp-select2-display-uikit:not(.kp-select2-has-value) {
+    color: var(--kptv-gray);
+}
+
+.kp-select2-arrow-uikit {
+    color: var(--kptv-orange);
+}
+
+.kp-select2-dropdown-uikit {
+    background: var(--kptv-navy);
+    border: 1px solid var(--kptv-cyan);
+    border-top: none;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.4);
+    border-radius: 0 0 4px 4px;
+}
+
+.kp-select2-search-uikit {
+    background: var(--kptv-dark-navy);
+    color: var(--kptv-white);
+    border: none;
+    border-bottom: 1px solid var(--kptv-cyan);
+}
+
+.kp-select2-search-uikit::placeholder {
+    color: var(--kptv-gray);
+}
+
+.kp-select2-search-uikit:focus {
+    border-bottom-color: var(--kptv-orange);
+}
+
+.kp-select2-result-item-uikit {
+    color: var(--kptv-white);
+}
+
+.kp-select2-result-item-uikit:hover {
+    background-color: rgba(61, 139, 189, 0.15);
+}
+
+.kp-select2-result-item-uikit.kp-select2-selected {
+    background-color: var(--kptv-orange);
+    color: var(--kptv-dark-navy);
+}
+
+.kp-select2-result-item-uikit.kp-select2-selected:hover {
+    background-color: var(--kptv-orange-hover);
+}
+
+.kp-select2-loading-uikit,
+.kp-select2-no-results-uikit {
+    color: var(--kptv-gray);
+}
+
+.kp-select2-error-uikit {
+    color: var(--kptv-danger);
+}
+
+.kp-select2-results-uikit::-webkit-scrollbar-track {
+    background: var(--kptv-dark-navy);
+}
+
+.kp-select2-results-uikit::-webkit-scrollbar-thumb {
+    background: var(--kptv-cyan);
+    border-radius: 4px;
+}
+
+.kp-select2-results-uikit::-webkit-scrollbar-thumb:hover {
+    background: var(--kptv-cyan-light);
 }

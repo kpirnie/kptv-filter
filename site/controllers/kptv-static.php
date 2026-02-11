@@ -76,47 +76,10 @@ if (! class_exists('KPTV_Static')) {
 
             // just return the matching config we need to present
             return (object) match ($which) {
-                'epg' => [
-                    'bulk' => [],
-                    'row' => [],
-                    'form' => [
-                        'u_id' => [
-                            'type' => 'hidden',
-                            'value' => $userId,
-                            'required' => true
-                        ],
-                        'se_active' => [
-                            'label' => 'Active',
-                            'type' => 'boolean',
-                            'required' => true,
-                            'class' => 'uk-width-1-2 uk-margin-bottom',
-                        ],
-                        'se_name' => [
-                            'label' => 'Name',
-                            'type' => 'text',
-                            'class' => 'uk-width-1-2 uk-margin-bottom',
-                        ],
-                        'se_source' => [
-                            'type' => 'url',
-                            'label' => 'Source',
-                            'class' => 'uk-width-1-1',
-                        ],
-                    ]
-                ],
                 'filters' => [
                     'bulk' => [],
                     'row' => [],
                     'form' => [
-                        'u_id' => [
-                            'label' => 'User',
-                            'type' => 'select2',
-                            'query' => 'SELECT id AS ID, u_name AS Label FROM kptv_users',
-                            'placeholder' => 'Select a user...',
-                            'required' => true,
-                            'min_search_chars' => 2,
-                            'max_results' => 50,
-                            'class' => 'uk-width-1-1',
-                        ],
                         'sf_active' => [
                             'label' => 'Active',
                             'type' => 'boolean',
@@ -141,12 +104,11 @@ if (! class_exists('KPTV_Static')) {
                             'label' => 'Filter',
                             'class' => 'uk-width-1-1',
                         ],
-                        /*'u_id' => [
+                        'u_id' => [
                             'type' => 'hidden',
                             'value' => $userId,
                             'required' => true
-                        ],*/
-
+                        ],
                     ]
                 ],
                 'providers' => [

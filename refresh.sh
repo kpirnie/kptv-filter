@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # get the user that owns our app here
-APP_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/app.kptv.im"
+APP_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/site"
 APP_USER=$(stat -c '%U' "$APP_PATH")
 
 # make sure we own it
