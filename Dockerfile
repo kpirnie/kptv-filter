@@ -10,6 +10,8 @@ RUN apk add --no-cache \
     # Add build dependencies as virtual package
     && apk add --no-cache --virtual .build-deps \
     $PHPIZE_DEPS \
+    sqlite-dev \
+    pkgconf \
     && docker-php-ext-install pdo_sqlite opcache \
     # Install Redis extension
     && yes '' | pecl install redis \
