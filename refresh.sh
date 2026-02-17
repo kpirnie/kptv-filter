@@ -10,10 +10,10 @@ chown -R $APP_USER:$APP_USER $APP_PATH*;
 export COMPOSER_ALLOW_SUPERUSER=1;
 
 # update all packages
-composer -d $APP_PATH update;
+composer -d $APP_PATH update --ignore-platform-reqs;
 
 # dump the composer autoloader and force it to regenerate
-composer -d $APP_PATH dumpautoload -o -n;
+composer -d $APP_PATH dumpautoload -o -n --ignore-platform-reqs;
 
 # Cleanup First
 php $APP_PATH/vendor/kevinpirnie/kpt-cache/src/cache/cleaner.php --cleanup

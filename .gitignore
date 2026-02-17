@@ -16,3 +16,4 @@ data/*
 !data/schema.sqlite.sql
 site/
 !data/.gitkeep
+kptv-data.sql
