@@ -14,3 +14,4 @@ docker-compose.yaml
 data/*
 !data/schema.sql
 site/
+!data/.gitkeep

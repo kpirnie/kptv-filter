@@ -7,6 +7,8 @@
     "mainsecret": "",
     "database": {
         "tbl_prefix": "kptv_",
+        "driver": "sqlite",
+        "sqlite_path": "./data/kptv.sqlite",
         "server": "localhost",
         "schema": "",
         "username": "",
