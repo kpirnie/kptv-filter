@@ -1,6 +1,6 @@
 # KPTV Stream Manager
 
-A containerized PHP 8.4 web application for managing IPTV streams, providers, and playlists with Xtream Codes API compatibility. Ships as a single Docker image with PHP-FPM, nginx, MariaDB, Redis, and cron built in.
+A containerized PHP 8.4 web application for managing IPTV streams, providers, and playlists with Xtream Codes API compatibility. Ships as a single Docker image with PHP-FPM, nginx, SQLite, Redis, and cron built in.
 
 ## Features
 
@@ -27,7 +27,7 @@ A containerized PHP 8.4 web application for managing IPTV streams, providers, an
 cp config/config-example.json config.json
 ```
 
-Edit `config.json` with your settings. At minimum you need `mainuri`, `mainkey`, `mainsecret`, and database credentials. The container creates the database, user, and imports the schema automatically on first run.
+Edit `config.json` with your settings. At minimum you need `mainuri`, `mainkey`, `mainsecret`, and SQLite database settings. The container creates the SQLite file and imports the schema automatically on first run.
 
 ### 2. Start the Container
 
@@ -42,7 +42,7 @@ docker pull ghcr.io/kpirnie/kptv-app:latest
 docker run -d \
   --name kptv-stream-manager \
   -p 8080:80 \
-  -v kptv-data:/var/lib/mysql \
+  -v ./data:/var/lib/data \
   -v ./config.json:/var/www/html/config.json \
   --restart unless-stopped \
   ghcr.io/kpirnie/kptv-app:latest
@@ -53,8 +53,8 @@ docker run -d \
 Browse to `http://localhost:8080`, register an account at `/users/register`, then promote the first user to admin (role `99`) directly in the database:
 
 ```bash
-docker exec -it kptv-stream-manager mariadb -u kptv -pkptv123 kptv \
-  -e "UPDATE kptv_users SET u_role = 99, u_active = 1 WHERE id = 1;"
+docker exec -it kptv-stream-manager sqlite3 /var/lib/data/kptv.sqlite \
+  "UPDATE kptv_users SET u_role = 99, u_active = 1 WHERE id = 1;"
 ```
 
 ---
@@ -81,7 +81,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - kptv-data:/var/lib/mysql
+      - ./data:/var/lib/data
       # Required: Your application config
       - ./config.json:/var/www/html/config.json
       # Optional: Custom cron schedule
@@ -99,12 +99,12 @@ All services are managed by the entrypoint script and run inside a single Alpine
 | Service | Details |
 |---------|---------|
 | **nginx** | Web server on port 80, security headers, CSP, static asset caching |
-| **PHP 8.4 FPM** | Application runtime with OPcache, Redis, PDO MySQL extensions |
-| **MariaDB** | Database engine, auto-initialized on first run from `config.json` credentials |
+| **PHP 8.4 FPM** | Application runtime with OPcache, Redis, PDO SQLite extensions |
+| **SQLite** | File-based database, auto-initialized on first run from `config/schema.sqlite.sql` |
 | **Redis** | Application caching layer |
 | **cron** | Scheduled sync and missing stream checks |
 
-Database data persists via the `/var/lib/mysql` volume mount.
+Database data persists via the `/var/lib/data` volume mount.
 
 ### Environment Variables
 
@@ -116,7 +116,7 @@ Database data persists via the `/var/lib/mysql` volume mount.
 
 | Container Path | Purpose | Required |
 |----------------|---------|----------|
-| `/var/lib/mysql` | Database persistence | Yes |
+| `/var/lib/data` | SQLite database persistence | Yes |
 | `/var/www/html/config.json` | Application configuration | Yes |
 | `/etc/crontabs/root` | Custom cron schedule | No |
 
@@ -183,7 +183,7 @@ Override by mounting your own crontab file.
 | `mainuri` | Your app's public URL (no trailing slash) |
 | `xcuri` | URL that IPTV apps connect to for the XC API (usually same as `mainuri`) |
 | `mainkey` / `mainsecret` | Used for AES-256-CBC encryption of session data and user tokens |
-| `database` | MariaDB connection — the container creates this DB and user on first boot |
+| `database` | SQLite connection settings (`driver`, `sqlite_path`) and legacy DB options |
 | `smtp` | Required for registration activation emails and password resets |
 | `recaptcha` | Google reCAPTCHA v3 keys for login, register, and forgot password forms |
 
@@ -396,7 +396,7 @@ kptv-stream-manager/
 │   │   └── pages/                # Page templates (home, streams, users, etc.)
 │   └── vendor/                   # Composer dependencies
 ├── data/                         # Persistent data directory (gitignored)
-├── Dockerfile                    # Alpine PHP 8.4 FPM + nginx + MariaDB + Redis
+├── Dockerfile                    # Alpine PHP 8.4 FPM + nginx + SQLite + Redis
 ├── docker-compose-example.yaml
 ├── entrypoint.sh                 # Container init (DB setup, service startup)
 ├── refresh.sh                    # Bare-metal deploy/refresh script
