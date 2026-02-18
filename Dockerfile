@@ -13,9 +13,6 @@ RUN apk add --no-cache \
     sqlite-dev \
     pkgconf \
     && docker-php-ext-install pdo_sqlite opcache \
-    # Install Redis extension
-    && yes '' | pecl install redis \
-    && docker-php-ext-enable redis \
     # Cleanup build dependencies
     && apk del .build-deps
 
