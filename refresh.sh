@@ -42,3 +42,5 @@ chmod +x refresh.sh
 
 # podman build --network=host -t ghcr.io/kpirnie/kptv-app:latest .
 # podman push ghcr.io/kpirnie/kptv-app:latest
+
+# podman tag ghcr.io/kpirnie/kptv-app:dev ghcr.io/kpirnie/kptv-app:latest
